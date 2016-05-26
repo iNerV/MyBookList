@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>{{ user.username }} / Профиль</title>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <div class="col-md-4 col-sm-4 col-xs-4">
+      <div class="row"><img class="avatar img-responsive" src='{{ user.avatar }}' alt='{{ user.username }}' title="{{ user.username }}" width="160px"></div>
+      <div class="row">
+        <div class="col-md-5 col-md-offset-1  col-sm-5 col-sm-offset-1 col-xs-5 col-xs-offset-1"><i class="material-icons md-16"><a>email</a></i></div>
+        <div class="col-md-5 col-sm-5 col-xs-5"><i class="material-icons md-16"><a href="{% url 'user-settings' user.slug %}">settings</a></i></div>
+        <div class="col-md-5 col-sm-5 col-xs-5"><i class="material-icons md-16"><a>warning</a></i></div>
+      </div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <h2 class="username">{{ user.username }} <small>онлайн около 17 часов назад</small></h2><br>
+      <div class="notice">
+        <span>{{ user.get_full_name }}</span>
+        <span>{{ user.get_gender_display }}</span>
+        <span>{{ user.city }}</span>
+        <span>на сайте с <abbr data-toggle="tooltip" data-placement="right" title="{{ user.date_joined.date }}">{{ user.date_joined.year }}</abbr></span>
+      </div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="row">
+        <div class="progress">
+          <div class="progress-bar progress-bar-success" style="width: 80%">
+            35
+          </div>
+          <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 15%">
+            20
+          </div>
+          <div class="progress-bar progress-bar-danger" style="width: 5%">
+            10
+          </div>
+        </div>
+        <div class="notice">
+          <span><a>Запланировано (53)</a></span>
+          <span><a>Читаю (6)</a></span>
+          <span><a>Прочитано (536)</a></span>
+          <span><a>Отложено (8)</a></span>
+          <span><a>Брошено (7)</a></span>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-md-16 col-sm-16  col-xs-16 p-activity">
+          <span><strong>Активность:</strong>
+              <a>5 отзывов</a>,
+              <a>177 правок контента</a>,
+              <a>523 комментария</a>,
+              <a>111 рецензий</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 col-sm-16 hidden-sm hidden-xs">
+    <div class="col-md-16">
+        <div class="title grey lighten-3 text-uppercase text-bold">
+          <a href="">
+            <span>Любимые жанры</span>
+          </a>
+        </div>
+        <div class="col-md-16">
+          <ul style="margin: 0; padding-top: 0; padding-bottom: 0">
+            <li>Fantasy</li>
+            <li>Action</li>
+            <li>Epic</li>
+            <li>Heroic</li>
+            <li>Detective</li>
+            <li>Cyberpunk</li>
+            <li>Space</li>
+            <li>Humor</li>
+          </ul>
+        </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-8 col-sm-16 col-xs-16">
+    <div class="col-md-16 col-sm-16 col-xs-16">
+        <div class="title grey lighten-3 text-uppercase text-bold">
+          <a href="">
+            <span>История</span>
+          </a>
+        </div>
+        <div class="col-md-16 col-sm-16 col-xs-16">
+          <div class="row p-history">
+              <div class="col-md-2 col-sm-2 col-xs-2"><img class="img-responsive center-block" src="https://d.gr-assets.com/books/1423301342m/24859405.jpg" width="50px" height="70px"></div>
+              <div class="col-md-14 col-sm-14 col-xs-14 line-height-20">
+                  <div class="row">
+                      <div class="col-md-16 col-sm-16 col-xs-16 text-bold"><a href="/">Слишком много кошмаров</a></div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-16 col-sm-16 col-xs-16 notice"><small>от <a>Max Frei</a></small></div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-16 col-sm-16 col-xs-16 notice">Прочитано и оценено на 10</div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-16 col-sm-16 col-xs-16 notice grey-text text-right">10 часов назад</div>
+                  </div>
+              </div>
+          </div>
+          <div class="row p-history">
+              <div class="col-md-2 col-sm-2 col-xs-2"><img class="img-responsive" src="https://d.gr-assets.com/books/1423301342m/24859405.jpg" width="50px" height="70px"></div>
+              <div class="col-md-14 col-sm-14 col-xs-14 line-height-20">
+                  <div class="row">
+                      <div class="col-md-16 col-sm-16 col-xs-16 text-bold"><a>Слишком много кошмаров</a></div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-16 col-sm-16 col-xs-16 notice"><small>от <a>Max Frei</a></small></div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-16 col-sm-16 col-xs-16 notice">Прочитано и оценено на 10</div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-16 col-sm-16 col-xs-16 notice grey-text text-right">10 часов назад</div>
+                  </div>
+              </div>
+          </div>
+          <div class="row p-history">
+              <div class="col-md-2 col-sm-2 col-xs-2"><img class="img-responsive" src="https://d.gr-assets.com/books/1423301342m/24859405.jpg" width="50px" height="70px"></div>
+              <div class="col-md-14 col-sm-14 col-xs-14 line-height-20">
+                  <div class="row">
+                      <div class="col-md-16 col-sm-16 col-xs-16 text-bold"><a>Слишком много кошмаров</a></div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-16 col-sm-16 col-xs-16 notice"><small>от <a>Max Frei</a></small></div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-16 col-sm-16 col-xs-16 notice">Прочитано и оценено на 10</div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-16 col-sm-16 col-xs-16 notice grey-text text-right">10 часов назад</div>
+                  </div>
+              </div>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="col-md-8 col-sm-16 col-xs-16">
+  <div class="col-md-4 col-sm-6 col-xs-8 visible-sm visible-xs">
+    <div class="col-md-16 col-sm-16 col-xs-16">
+        <div class="title grey lighten-3 text-uppercase text-bold">
+          <a href="">
+            <span>Любимые жанры</span>
+          </a>
+        </div>
+        <div class="col-md-16 col-sm-16 col-xs-16">
+            Fantasy Action Epic Heroic Detective Cyberpunk Space Humor Fantasy
+        </div>
+    </div>
+  </div>
+  <div class="col-md-8 col-sm-5 col-xs-8">
+    <div class="title grey lighten-3 text-uppercase text-bold">
+      <a href="">
+        <span>Друзья</span>
+      </a>
+    </div>
+    <div class="col-md-4 col-sm-4 col-xs-4"><img class="img-responsive" src="http://ipolk.ru/uploads/images/01/24/46/2015/08/18/avatar_64x64.jpg?171800"></div>
+    <div class="col-md-4 col-sm-4 col-xs-4"><img class="img-responsive" src="http://tltpravda.ru/uploads/images/00/00/43/2014/01/23/avatar_64x64.jpg?222315"></div>
+    <div class="col-md-4 col-sm-4 col-xs-4"><img class="img-responsive" src="http://ipolk.ru/uploads/images/00/00/01/2012/11/16/avatar_64x64.jpg?210225"></div>
+    <div class="col-md-4 col-sm-4 col-xs-4"><img class="img-responsive" src="http://desu.shikimori.org/images/user/x160/4193.png?1365955188"></div>
+  </div>
+  <div class="col-md-8 col-sm-5 col-xs-16">
+    <div class="title grey lighten-3 text-uppercase text-bold">
+      <a href="">
+        <span>Клубы</span>
+      </a>
+    </div>
+    <div class="col-md-4 col-sm-4 col-xs-4"><img class="center-block" src="http://static.parastorage.com/services/wixapps/2.484.0/javascript/wixapps/apps/blog/images/social/twitter.png" height="45px" width="45px"></div>
+    <div class="col-md-4 col-sm-4 col-xs-4"><img class="center-block" src="http://static.parastorage.com/services/wixapps/2.484.0/javascript/wixapps/apps/blog/images/social/facebook.png" height="45px" width="45px"></div>
+    <div class="col-md-4 col-sm-4 col-xs-4"><img class="center-block" src="http://static.parastorage.com/services/wixapps/2.484.0/javascript/wixapps/apps/blog/images/social/pinterest.png" height="45px" width="45px"></div>
+    <div class="col-md-4 col-sm-4 col-xs-4"><img class="center-block" src="https://cdn2.iconfinder.com/data/icons/social-flat-buttons-3/512/telegram-128.png" height="45px" width="45px"></div>
+  </div>
+  <div class="col-md-16 col-sm-16 col-xs-16">
+    <div class="title grey lighten-3 text-uppercase text-bold">
+      <a href="">
+        <span>Избранное</span>
+      </a>
+    </div>
+    <div class="col-md-2 col-sm-2 col-xs-2"><a href="#"><img class="center-block" src="https://d.gr-assets.com/books/1222145606s/4761126.jpg"></a></div>
+    <div class="col-md-2 col-sm-2 col-xs-2"><a href="#"><img class="center-block" src="https://d.gr-assets.com/books/1327885335s/10664113.jpg"></a></div>
+    <div class="col-md-2 col-sm-2 col-xs-2"><a href="#"><img class="center-block" src="https://d.gr-assets.com/books/1370023538s/136251.jpg"></a></div>
+    <div class="col-md-2 col-sm-2 col-xs-2"><a href="#"><img class="center-block" src="https://d.gr-assets.com/books/1238436026s/6369955.jpg"></a></div>
+    <div class="col-md-2 col-sm-2 col-xs-2"><a href="#"><img class="center-block" src="https://d.gr-assets.com/books/1389236610s/534415.jpg"></a></div>
+    <div class="col-md-2 col-sm-2 col-xs-2"><a href="#"><img class="center-block" src="https://d.gr-assets.com/books/1361482611s/6.jpg"></a></div>
+    <div class="col-md-2 col-sm-2 col-xs-2"><a href="#"><img class="center-block" src="https://d.gr-assets.com/books/1369828846s/17996565.jpg"></a></div>
+    <div class="col-md-2 col-sm-2 col-xs-2"><a href="#"><img class="center-block" src="https://d.gr-assets.com/books/1341398952s/11186923.jpg"></a></div>
+  </div>
+  </div>
+</div>
+{% if user.about.rendered %}
+<div class="row">
+  <div class="col-md-16">
+    <div class="col-md-16">
+      <div class="title grey lighten-3 text-uppercase text-bold">
+        <span>Обо мне</span>
+      </div>
+      <div class="col-md-16">
+        <p>
+          {{ user.about.rendered }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+{% endif %}
+{% endblock %}
+

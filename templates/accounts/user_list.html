@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-16">В данном разделе представлены все пользователи сайта,
+        отсортированные по дате последнего захода на сайт.</div>
+  </div>
+  {% for user in object_list %}
+    <div class="row">
+      <div class="col-md-2">
+        <a class="thumbnail" href="{% url 'user-detail' user.slug %}"><img class="center-block" src="{{ user.avatar }}"></a>
+      </div>
+      <div class="col-md-7">
+        <div class="text-bold"><a href="{% url 'user-detail' user.slug %}">{{ user.username }}</a></div>
+        <div class="notice">{{ user.last_login }}</div>
+      </div>
+      <div class="col-md-7">
+        <div class="col-md-8">
+          book name
+        </div>
+        <div class="col-md-8 grey-text lighten-1 text-right">
+          time
+        </div>
+        <div class="col-md-8">
+          book name
+        </div>
+        <div class="col-md-8 grey-text lighten-1 text-right">
+          time
+        </div>
+        <div class="col-md-8">
+          book name
+        </div>
+        <div class="col-md-8 grey-text lighten-1 text-right">
+          time
+        </div>
+        <div class="col-md-8">
+          book name
+        </div>
+        <div class="col-md-8 grey-text lighten-1 text-right">
+          time
+        </div>
+        <div class="col-md-8">
+          book name
+        </div>
+        <div class="col-md-8 grey-text lighten-1 text-right">
+          time
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p>Нет юзеров</p>
+  {% endfor %}
+      </div>
+{% endblock %}
+

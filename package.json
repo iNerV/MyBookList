@@ -1,0 +1,13 @@
+{
+  "name": "mbl",
+  "version": "0.0.1",
+  "dependencies": {
+        "gulp": "*",
+        "gulp-coffee": "*",
+        "gulp-less": "*",
+        "gulp-csso": "*",
+        "gulp-concat": "*",
+        "gulp-rename": "*"
+    }
+}
+

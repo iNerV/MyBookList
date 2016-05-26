@@ -1,0 +1,399 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% block title %}
+    <title>{{ booksummary.original_title }} / Книга</title>
+{% endblock %}
+
+{% block content %}
+<div class="row row-offcanvas row-offcanvas-right" style="margin-right: 0;">
+  <div class="col-md-13">
+  <p class="pull-right visible-xs">
+    <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
+  </p>
+    <div class="row">
+      <div class="col-md-5">
+        <img class="cover img-responsive" src="{{ cover }}">
+          <div class="row">
+            <div class="col-md-4 col-sm-4 col-xs-4 text-justify"><i class="material-icons md-18"><a href="/" data-toggle="tooltip" data-placement="top" title="Комментировать">chat_bubble</a></i></div>
+            <div class="col-md-4 col-sm-4 col-xs-4 text-justify"><i class="material-icons md-18"><a data-toggle="tooltip" data-placement="top" title="Написать обзор">create</a></i></div>
+            <div class="col-md-4 col-sm-4 col-xs-4 text-right"><i class="material-icons md-18"><a data-toggle="tooltip" data-placement="top" title="В избранное">favorite</a></i></div>
+            <div class="col-md-4 col-sm-4 col-xs-4 text-right"><i class="material-icons md-18"><a data-toggle="tooltip" data-placement="top" title="Редактировать">settings</a></i></div>
+          </div>
+        <div class="list-action border blue lighten-5 blue-border lighten-4-border text-bold mb10">
+          <span><i class="glyphicon glyphicon-plus"></i> Добавить в список</span><div class="pull-right t-padding"> <a role="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"><i class="glyphicon glyphicon-triangle-bottom"></i></a></div>
+          <div class="collapse bg" id="collapseExample">
+            <span>Запланировано</span>
+            <span>Читаю</span>
+            <span>Перечитываю</span>
+            <span>Отложено</span>
+            <span>Брошено</span>
+            <span class="red-text">Удалить из списка</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-11">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="title grey lighten-3 text-uppercase text-bold">
+              <span>Информация</span>
+            </div>
+            <div class="small">
+              <p><span class="grey-text darken-1">ISBN:</span> {% for book in books|slice:":1" %}{{ book.isbn }}{% endfor %} <a>и др.</a></p>
+              <p><span class="grey-text">ISBN13:</span>  {% for book in books|slice:":1" %}{{ book.isbn13 }}{% endfor %} <a>и др.</a></p>
+              <p><span class="grey-text">ASIN:</span> {% for book in books|slice:":1" %}{{ book.asin }}{% endfor %} <a>и др.</a></p>
+              <p><span class="grey-text">Языки:</span> {% for l in lang %}{{ l }}, {% endfor %} <a>и др.</a></p> {# TODO придумать как это дело выводить правильно #}
+              <p><span class="grey-text"><abbr title="В различных изданиях и на разных языках количество страниц отличается">Страниц:</abbr></span>{% if num_pages.min %} от {{ num_pages.min }} до {{ num_pages.max }}{% else %} Неизвестно{% endif %}</p>
+              <p><span class="grey-text">Форматы:</span> {% for f in format %}{{ f }}, {% endfor %} <a>и др.</a></p>
+              <p><span class="grey-text">Дата первой публикации:</span> {{ booksummary.original_publication_date|date:"d/m/Y" }}</p>
+              <p><span class="grey-text">Рейтинг:</span> {{ booksummary.get_content_rating_display }}</p>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="title grey lighten-3">
+              <span class="text-uppercase text-bold">Рейтинг</span>
+            </div>
+            <div>
+              <div style="display: inline-block; margin-left: -6px; float: left"><input title="" id="input-id" type="number" value="2.73"></div>
+              <div class="book-rating">2.73</div>
+              <div class="xsmall" style="margin-left: 10px; float: left">хорошо</div> {# FIXME #}
+            </div><br><br>
+            <div class="title grey lighten-3 grey-border darken-1-border">
+              <span class="text-uppercase text-bold">Жанры</span>
+            </div>
+            <div class="genres">
+              <p><a class="dotted">Fantasy</a> <a>Action</a> <a>Epic</a> <a>Heroic</a> <a>Detective</a> <a>Cyberpunk</a> <a>Space</a> <a>Humor</a></p>
+            </div>
+          </div>
+          <div class="col-md-16">
+            <div class="title grey lighten-3 text-uppercase text-bold">
+              <span>Описание</span>
+            </div>
+            <p>{{ booksummary.description }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="row"></div>
+      <div class="col-md-8">
+        <div class="title grey lighten-3">
+          <div class="row">
+            <div class="col-xs-5 text-uppercase text-bold"><span>Связанное</span></div>
+            <div class="col-xs-11 xsmall text-right"><a>Напрямую</a> / <a>Хронология</a> / <a style="margin-right: 5px;">Франшиза</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="title grey lighten-3 text-uppercase text-bold">
+          <span>Авторы</span>
+        </div>
+        {% for author in authors %}
+          <div class="media p-history">
+            <div class="media-left">
+              {% thumbnail author.author.get_photo "40" as photo %}
+                <a href="{{ author.author.get_absolute_url }}">
+                  <img src="{{ photo.url }}" >
+                </a>
+              {% endthumbnail %}
+            </div>
+            <div class="media-body">
+              <div class="text-bold"><a href="{{ author.author.get_absolute_url }}">{{ author.author.name }}</a></div>
+              <div class="notice">{{ author.get_role_display }}</div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="col-md-16">
+        <div class="title grey lighten-3 text-uppercase text-bold">
+          <span>Похожее</span>
+        </div>
+      </div>
+      <div class="col-md-16">
+        <div class="title grey lighten-3 text-uppercase text-bold">
+          <span>Отзывы</span>
+        </div>
+        <div class="comment">
+          <div class="comment-img"><img src="https://placehold.it/45x45" alt=""></div>
+          <div class="comment-header">
+            <div class="name"><a><strong>Test Name</strong></a></div>
+            <div class="date">3 дня назад</div>
+            <div class="review">
+              <span class="label light-blue darken-2">Новое</span>
+              <span class="label green">Отзыв</span>
+              <span class="label orange darken-1">Оффтоп</span>
+            </div>
+          </div>
+          <div class="text">{% lorem %}</div>
+        </div>
+        <div class="title grey lighten-3 text-uppercase text-bold">
+          <span>Добавить комментарий</span>
+        </div>
+        <form action="">
+          <div class="row">
+            <div class="col-md-10">
+              <div class="style">
+                <div class="style-item"><i class="material-icons md-18" onclick="add_code('b')"><a data-toggle="tooltip" data-placement="top" title="Жирный">format_bold</a></i></div>
+                <div class="style-item"><i class="material-icons md-18" onclick="add_code('i')"><a data-toggle="tooltip" data-placement="top" title="Курсив">format_italic</a></i></div>
+                <div class="style-item"><i class="material-icons md-18" onclick="add_code('u')"><a data-toggle="tooltip" data-placement="top" title="Подчеркнутый">format_underlined</a></i></div>
+                <div class="style-item"><i class="material-icons md-18" onclick="add_code('s')"><a data-toggle="tooltip" data-placement="top" title="Зачеркнутый">strikethrough_s</a></i></div>
+                <div class="style-item"></div>
+                <div class="style-item"><i class="material-icons md-18" onclick="add_code('b')"><a data-toggle="tooltip" data-placement="top" title="Вставить ссылку">insert_link</a></i></div>
+                <div class="style-item"><i class="material-icons md-18" onclick="add_code('b')"><a data-toggle="tooltip" data-placement="top" title="Сылка на изображение">insert_photo</a></i></div>
+                <div class="style-item"><i class="material-icons md-18" onclick="add_code('b')"><a data-toggle="tooltip" data-placement="top" title="Цитата">format_quote</a></i></div>
+                <div class="style-item"><i class="material-icons md-18" onclick="add_code('b')"><a data-toggle="tooltip" data-placement="top" title="Спойлер">warning</a></i></div>
+                <div class="style-item"></div>
+                <div class="style-item"><i class="material-icons md-18" onclick="add_code('b')"><a data-toggle="tooltip" data-placement="top" title="Загрузить изображение">file_upload</a></i></div>
+                <div class="style-item"><i class="material-icons md-18" onclick="add_code('b')"><a data-toggle="tooltip" data-placement="top" title="Смайлик">face</a></i></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="type">
+                <a href="#" class="off"><span class="label label-default">Отзыв</span></a>
+                <a href="#" class="rev"><span class="label label-default">Оффтоп</span></a>
+              </div>
+            </div>
+            <div class="col-md-16">
+              <textarea class="add-text" name="" title="" id="add_comment"></textarea>
+            </div>
+            <div class="col-md-5">
+              <button class="btn-one">Написать</button>
+              <button class="btn-two">Предпросмотр</button>
+            </div>
+            <div class="col-md-11">
+              <a id="scroll-top" href="#">↑↑↑↑↑↑↑</a>
+              <a href="#" class="info"><small>Справка по бб-кодам</small></a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 sidebar-offcanvas" id="sidebar">
+    <div class="row">
+      <div class="title grey lighten-3 text-uppercase text-bold green-border">
+        <span>У Друзей</span>
+      </div>
+    </div>
+    <div class="row">
+    <ul class="list-unstyled">
+      <li>
+        <a href="" class="pull-left small"><img src="http://placehold.it/20x20"> Друг</a>
+        <span class="pull-right small">Прочитано - 10</span>
+      </li>
+    </ul>
+    </div>
+    <div class="row">
+      <div class="title grey lighten-3 text-uppercase text-bold pink-border">
+        <span>В Избранном</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 5px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 5px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 5px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 5px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 5px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 5px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 5px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 5px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 5px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 5px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 5px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 5px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 5px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 5px;" src="http://placehold.it/64x64"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="title grey lighten-3 text-uppercase text-bold red-border">
+        <span>Клубы</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4 col-md-4 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 10px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 10px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 10px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 10px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 10px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 10px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 10px;" src="http://placehold.it/64x64"></div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-2 col-xs-4">
+        <div class="row"><img class="center-block mb10 img-responsive" style="padding-right: 10px;" src="http://placehold.it/64x64"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="title grey lighten-3 text-uppercase text-bold purple-border">
+        <span>на других сайтах</span>
+      </div>
+    </div>
+    <div class="row">
+      <ul class="list-unstyled">
+        <li><img src="http://placehold.it/20x20"> LiveLib</li>
+        <li><img src="http://placehold.it/20x20"> GoodReads</li>
+        <li><img src="http://placehold.it/20x20"> Imhonet</li>
+        <li><img src="http://placehold.it/20x20"> LibraryThing</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% load staticfiles %}
+  <script src="{% static "js/star-rating.js" %}"></script>
+  <script>
+    $("#input-id").rating({min:0, max:5, step:1, size:'sm',
+        showClear:false,
+        animate:false,
+        displayOnly: true,
+        showCaption: false});
+
+    $("#input-id2").rating({min:0, max:5, step:1, size:'xs',
+        showClear:false,
+        animate:false,
+        starCaptionClasses: {
+            1: 'red-text xsmall text-bold',
+            2: 'orange-text xsmall text-bold',
+            3: 'blue-text darken-3-text xsmall text-bold',
+            4: 'light-green-text xsmall text-bold',
+            5: 'green-text darken-3-text xsmall text-bold'
+        },
+        starCaptions: {
+            1: 'Ужасно',
+            2: 'Плохо',
+            3: 'Нормально',
+            4: 'Хорошо',
+            5: 'Отлично'
+        },
+        clearCaption: ''});
+  </script>
+  <script>
+    var textarea = document.getElementById("add_comment");
+    function add_code(code) {
+    var len = textarea.value.length,
+        start = textarea.selectionStart,
+        end = textarea.selectionEnd,
+        sel = textarea.value.substring(start, end),
+        replace = '['+code+']' + sel + '[/'+code+']';
+    textarea.value = textarea.value.substring(0,start) + replace + textarea.value.substring(end,len);
+    }
+
+    function show_scroll_top_btn() {
+        if ($(document).scrollTop() > 500) {                // если скролл более чем на 500px
+            $('#scroll-top').fadeIn(150);                   // то покажем кнопку перемотки вверх
+        } else {                                            // иначе
+            $('#scroll-top').fadeOut(150);                  // скроем кнопку перемотки
+        }
+    }
+
+    $(document).ready(function() {
+        show_scroll_top_btn();                              // после готовности DOM тоже запустим функцию
+    });
+
+    // Скролл наверх, без якоря
+
+    $(window).on('scroll', function() {                     // отслеживаем событие на элементе window
+        show_scroll_top_btn();                              // на любой скролл запускаем функцию
+    });
+
+
+    $('#scroll-top').on('click', function(e) {              // отслеживаем событие на элементе #scroll-top
+        e.preventDefault();                                 // отменяем действия по умолчанию
+        var current_position = $(document).scrollTop();     // получаем позицию скролла
+        var scroll_time = current_position / 3;             // подсчитываем время анимации
+        $('body,html').animate({
+            'scrollTop': 0
+        }, scroll_time);                                    // собственно, анимируем
+    });
+
+
+    // Скроллы к якорям.
+
+    $(document).ready(function() {                          // загружается только после загрузки всей страницы
+        $('a[href^="#"]').on('click', function(){           // клик на ссылку, атрибут href которой начинается на #
+            var scrollTo = $(this).attr('href');            // пишем в переменную значение атрибута href этой ссылки
+            var scrollTime = $(scrollTo).offset().top / 3;  // время скролла
+            $('body,html').animate({                        // анимируем
+            'scrollTop': $(scrollTo).offset().top           // скролл куда (к id) к верхней границе элемента
+            }, scrollTime);                                 // за какое время
+            return false;
+        });
+    });
+  </script>
+  <script>
+    $(document).ready(function () {
+      $('[data-toggle="offcanvas"]').click(function () {
+        $('.row-offcanvas').toggleClass('active')
+      });
+    });
+  </script>
+  <script>
+$(document).ready(function() {
+
+    $ (window).scroll (function () {
+    if ($ (this).scrollTop () > 50) {
+    $ ('.to_top').fadeIn();
+    } else {
+    $ ('.to_top').fadeOut();
+    }
+    });
+
+    $('.to_top').click(function(){
+    $('body,html').animate({
+    scrollTop: 0
+    }, 100);
+    return false;
+    });
+
+    $('.to_top:before').hover(function() {
+    $(this).animate({
+    'opacity':'0.3'
+    }).css({'background-color':'#E1E7ED','width':'40px','content':'.'});
+    }, function(){
+    $(this).animate({
+    'opacity':'0.3'
+    }).css({'background':'none'});
+    });
+
+});
+</script>
+{% endblock %}

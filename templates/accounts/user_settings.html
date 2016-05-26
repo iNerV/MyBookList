@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Update" />
+    <button type="button" onclick="add_code('b')">b</button>
+    <button type="button" onclick="add_code('i')">i</button>
+    <button type="button" onclick="add_code('u')">u</button>
+    <button type="button" onclick="add_code('s')">s</button>
+    <button type="button" onclick="add_code('url')">url</button>
+    <button type="button" onclick="add_code('img')">img</button>
+</form>
+
+
+<script>
+var textarea = document.getElementById("id_about");
+function add_code(code) {
+var len = textarea.value.length,
+    start = textarea.selectionStart,
+    end = textarea.selectionEnd,
+    sel = textarea.value.substring(start, end),
+    replace = '['+code+']' + sel + '[/'+code+']';
+textarea.value = textarea.value.substring(0,start) + replace + textarea.value.substring(end,len);
+}
+</script>
+
+{% endblock %}

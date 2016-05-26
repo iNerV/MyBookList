@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% block title %}
+    <title>Книги</title>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="page-header">
+          <h2>Книги <small>На данной странице отображены Книги, отсортированные по рейтингу</small></h2>
+        </div>
+        <div class="col-md-12">
+          {% for book in booksummary_list %}
+            <div class="col-md-4">
+              <a href="{{ book.get_absolute_url }}">
+                {% for img in book.book_set.all|slice:"1" %}
+                  {% thumbnail img.cover "150x230" as img %}<img class="center-block" src="{{ img.url }}">{% empty %}<img class="center-block" src="http://placehold.it/150x230">{% endthumbnail %}
+                {% endfor %}
+                <div class="caption" style="overflow: hidden">
+                  <p>
+                    <span class="text-bold text-uppercase text-nowrap">{{ book.original_title }}</span><br>
+                    <span class="grey-text">{{ book.original_publication_date }}</span>
+                  </p>
+                </div>
+              </a>
+            </div>
+          {% empty %}
+            <p>Нет книг</p>
+          {% endfor %}
+        </div>
+        <div class="col-md-4">
+          <div class="title text-uppercase">
+            <span>Сортировка</span>
+          </div>
+          <div class="title text-uppercase">
+            <span>Список</span>
+          </div>
+          <div class="title text-uppercase">
+            <span>Жанры</span>
+          </div>
+        </div>
+    </div>
+{% endblock %}
