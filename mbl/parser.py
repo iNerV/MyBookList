@@ -14,7 +14,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'mbl.settings'
 django.setup()
 
 from django.conf import settings
-from books.models import Book, Author, Series, BookAuthor, BookSummary, BookSeries, Publisher
+from books.models import Edition, Author, Series, EditionAuthor, Book, EditionSeries, Publisher
 
 logger = logging.getLogger('grab')
 logger.addHandler(logging.StreamHandler())
@@ -142,42 +142,42 @@ def gr_parser(gr_id,):
 
         new_publisher, created = Publisher.objects.get_or_create(name=publisher)
 
-        book_sum, created = BookSummary.objects.get_or_create(work_id=work_id,
-                                                              original_title=original_title,
-                                                              original_publication_date=original_publication_date)
+        book_sum, created = Book.objects.get_or_create(work_id=work_id,
+                                                       original_title=original_title,
+                                                       original_publication_date=original_publication_date)
 
-        new_book, created = Book.objects.get_or_create(goodreads_id=goodreads_id,
-                                                       title=title,
-                                                       description=description,
-                                                       language=language,
-                                                       cover=save_image(cover, 'books/', book_sum),
-                                                       isbn=isbn,
-                                                       isbn13=isbn13,
-                                                       asin=asin,
-                                                       kindle_asin=kindle_asin,
-                                                       publication_date=publication_date,
-                                                       num_pages=num_pages,
-                                                       book_format=book_format,
-                                                       is_ebook=is_ebook,
-                                                       summary=book_sum,
-                                                       publisher=new_publisher)
+        new_book, created = Edition.objects.get_or_create(goodreads_id=goodreads_id,
+                                                          title=title,
+                                                          description=description,
+                                                          language=language,
+                                                          cover=save_image(cover, 'books/', book_sum),
+                                                          isbn=isbn,
+                                                          isbn13=isbn13,
+                                                          asin=asin,
+                                                          kindle_asin=kindle_asin,
+                                                          publication_date=publication_date,
+                                                          num_pages=num_pages,
+                                                          book_format=book_format,
+                                                          is_ebook=is_ebook,
+                                                          summary=book_sum,
+                                                          publisher=new_publisher)
 
         for val in author:
             new_author, created = Author.objects.get_or_create(goodreads_id=val['id'],
                                                                name=val['name'],
                                                                photo=save_image(val['image'], 'authors/', book_sum))  # FIXME передать id автора - хз как
-            book_author = BookAuthor.objects.create(book=new_book,
-                                                    author=new_author,
-                                                    role=val['role'])
+            book_author = EditionAuthor.objects.create(book=new_book,
+                                                       author=new_author,
+                                                       role=val['role'])
             book_author.save()
 
         for val in series:
             new_series, created = Series.objects.get_or_create(goodreads_id=val['id'],
                                                                title=val['title'],
                                                                description=val['description'])
-            book_series = BookSeries.objects.create(book=new_book,
-                                                    series=new_series,
-                                                    position=position_in_series)
+            book_series = EditionSeries.objects.create(book=new_book,
+                                                       series=new_series,
+                                                       position=position_in_series)
             book_series.save()
 
 gr_parser(1)

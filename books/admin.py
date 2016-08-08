@@ -1,18 +1,18 @@
 from django.contrib import admin
-from books.models import BookSummary,\
+from books.models import Book,\
     Author,\
     Series,\
-    Book,\
+    Edition,\
     Publisher,\
     CoverOfPublisher,\
-    BookAuthor,\
-    BookSeries,\
+    EditionAuthor,\
+    EditionSeries,\
     BookGenres,\
     AuthorPhoto
 
 
 class BookInline(admin.TabularInline):
-    model = Book
+    model = Edition
     extra = 1
 
 
@@ -27,12 +27,12 @@ class CoverOfPublisherInline(admin.TabularInline):
 
 
 class AuthorInline(admin.TabularInline):
-    model = BookAuthor
+    model = EditionAuthor
     extra = 1
 
 
 class SeriesInline(admin.TabularInline):
-    model = BookSeries
+    model = EditionSeries
     extra = 1
 
 
@@ -57,8 +57,8 @@ class SummaryAdmin(admin.ModelAdmin):
     inlines = [GenresInline]
 
 
-admin.site.register(BookSummary, SummaryAdmin)
+admin.site.register(Book, SummaryAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Series)
 admin.site.register(Publisher, PublisherAdmin)
-admin.site.register(Book, BookAdmin)
+admin.site.register(Edition, BookAdmin)

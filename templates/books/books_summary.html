@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load thumbnail %}
 {% block title %}
-    <title>{{ booksummary.original_title }} / Книга</title>
+    <title>{{ book.original_title }} / Книга</title>
 {% endblock %}
 
 {% block content %}
@@ -38,14 +38,14 @@
               <span>Информация</span>
             </div>
             <div class="small">
-              <p><span class="grey-text darken-1">ISBN:</span> {% for book in books|slice:":1" %}{{ book.isbn }}{% endfor %} <a>и др.</a></p>
-              <p><span class="grey-text">ISBN13:</span>  {% for book in books|slice:":1" %}{{ book.isbn13 }}{% endfor %} <a>и др.</a></p>
-              <p><span class="grey-text">ASIN:</span> {% for book in books|slice:":1" %}{{ book.asin }}{% endfor %} <a>и др.</a></p>
+              <p><span class="grey-text darken-1">ISBN:</span> {% for book in editions|slice:":1" %}{{ book.isbn }}{% endfor %} <a>и др.</a></p>
+              <p><span class="grey-text">ISBN13:</span>  {% for book in editions|slice:":1" %}{{ book.isbn13 }}{% endfor %} <a>и др.</a></p>
+              <p><span class="grey-text">ASIN:</span> {% for book in editions|slice:":1" %}{{ book.asin }}{% endfor %} <a>и др.</a></p>
               <p><span class="grey-text">Языки:</span> {% for l in lang %}{{ l }}, {% endfor %} <a>и др.</a></p> {# TODO придумать как это дело выводить правильно #}
               <p><span class="grey-text"><abbr title="В различных изданиях и на разных языках количество страниц отличается">Страниц:</abbr></span>{% if num_pages.min %} от {{ num_pages.min }} до {{ num_pages.max }}{% else %} Неизвестно{% endif %}</p>
               <p><span class="grey-text">Форматы:</span> {% for f in format %}{{ f }}, {% endfor %} <a>и др.</a></p>
-              <p><span class="grey-text">Дата первой публикации:</span> {{ booksummary.original_publication_date|date:"d/m/Y" }}</p>
-              <p><span class="grey-text">Рейтинг:</span> {{ booksummary.get_content_rating_display }}</p>
+              <p><span class="grey-text">Дата первой публикации:</span> {{ book.original_publication_date|date:"d/m/Y" }}</p>
+              <p><span class="grey-text">Рейтинг:</span> {{ book.get_content_rating_display }}</p>
             </div>
           </div>
           <div class="col-md-8">
@@ -68,7 +68,7 @@
             <div class="title grey lighten-3 text-uppercase text-bold">
               <span>Описание</span>
             </div>
-            <p>{{ booksummary.description }}</p>
+            <p>{{ book.description }}</p>
           </div>
         </div>
       </div>
@@ -90,7 +90,10 @@
             <div class="media-left">
               {% thumbnail author.author.get_photo "40" as photo %}
                 <a href="{{ author.author.get_absolute_url }}">
-                  <img src="{{ photo.url }}" >
+                  {% if post.image %}
+                    <img src="{{ photo.url }}" >
+                  {% else %}
+                  {% endif %}
                 </a>
               {% endthumbnail %}
             </div>
@@ -370,7 +373,7 @@
 $(document).ready(function() {
 
     $ (window).scroll (function () {
-    if ($ (this).scrollTop () > 50) {
+    if ($ (this).scrollTop() > 50) {
     $ ('.to_top').fadeIn();
     } else {
     $ ('.to_top').fadeOut();

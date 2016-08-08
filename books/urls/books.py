@@ -4,5 +4,5 @@ from books import views
 
 urlpatterns = [
     url(r'^$', views.BooksList.as_view(), name='books-list'),
-    url(r'^(?P<pk>\d+)/$', views.BooksSummary.as_view(), name='book-summary'),
+    url(r'^(?P<pk>\d+)/$', views.BookDetail.as_view(), name='book-summary'),
 ]
