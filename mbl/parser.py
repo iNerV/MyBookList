@@ -87,8 +87,10 @@ def gr_parser(gr_id,):
         original_publication_year = g.doc.select('//original_publication_year').text()
         original_publication_month = g.doc.select('//original_publication_month').text()
         original_publication_day = g.doc.select('//original_publication_day').text()
-        original_publication_date = original_publication_year + '-' + \
-                                    original_publication_month + '-' + \
+        original_publication_date = original_publication_year + \
+                                    '-' + \
+                                    original_publication_month + \
+                                    '-' + \
                                     original_publication_day
 
         print(goodreads_id,

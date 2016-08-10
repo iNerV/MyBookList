@@ -88,14 +88,9 @@
         {% for author in authors %}
           <div class="media p-history">
             <div class="media-left">
-              {% thumbnail author.author.get_photo "40" as photo %}
                 <a href="{{ author.author.get_absolute_url }}">
-                  {% if post.image %}
-                    <img src="{{ photo.url }}" >
-                  {% else %}
-                  {% endif %}
+                    <img src="{{ author.author.get_photo.image_xs.url }}" >
                 </a>
-              {% endthumbnail %}
             </div>
             <div class="media-body">
               <div class="text-bold"><a href="{{ author.author.get_absolute_url }}">{{ author.author.name }}</a></div>
