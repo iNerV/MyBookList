@@ -5,6 +5,8 @@ from django.db.models.deletion import SET_NULL
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
+from books.utils import convert_10_to_13
+
 from core.constants import LANGUAGES, FORMATS, DEGREE, GENDER, CONTENT_RATING, ROLE, PLOT_STRUCTURES, TIME_OF_ACTION
 from core.mixins import AbstractBilingual, AbstractImage
 
@@ -167,7 +169,7 @@ class Edition(AbstractImage, models.Model):
     publication_date = models.DateField(null=True, blank=True)
     num_pages = models.IntegerField(null=True, blank=True)
     book_format = models.IntegerField(choices=FORMATS, default=0)
-    is_ebook = models.BooleanField()
+    is_ebook = models.BooleanField()  # todo подумать над удалением (дублирующая информаиця)
     is_original = models.BooleanField(default=False)
     publisher = models.ForeignKey(Publisher, on_delete=SET_NULL, null=True, blank=True)
     author = models.ManyToManyField(Author, through='EditionAuthor')
@@ -181,11 +183,15 @@ class Edition(AbstractImage, models.Model):
         return self.title
 
     def clean(self, *args, **kwargs):
+        if self.isbn and not self.isbn13:
+            self.isbn13 = convert_10_to_13(self.isbn)
+
         if self.publication_date:
             pub_date = Edition.objects.filter(summary=self.summary, publication_date__lte=self.publication_date)\
                 .exclude(pk=self.pk)
             if not pub_date:
                 self.is_original = True
+
         if self.is_original:
             min_pub = Edition.objects.aggregate(min=Min('publication_date'))
             if self.publication_date > min_pub['min'] and min_pub is not None:

@@ -54,12 +54,18 @@ CONTENT_RATING = (
 
 ROLE = (
     (0, _('Unknown')),
-    (1, _('Author')),
+    (1, _('Author')),  # Yazar, Creator
     (2, _('Illustrator')),
     (3, _('Contributor')),
-    (4, _('Editor')),
-    (5, _('Translator')),
-    (6, _('Narrator')),
+    (4, _('Editor')),  # Herausgeber
+    (5, _('Translator')),  # Çevirmen, Übersetzer, ترجمة وتقديم, 翻訳, ترجمة, prevod, traducător, trad., Penerjemah, Oversetter
+    (6, _('Narrator')),  # Narrated by, Oppleser
+    (7, _('Preface by')),  # + Foreword, Preface
+    (8, _('Afterword by')),  # Afterword
+    (9, _('Introduction')),
+    (10, _('Prologue by')),  # Prologue
+    (11, _('Adapted by')),  # Adapted, Adapter
+    (12, _('Reader')),  # Read by, Reading
 )
 
 FORMATS = (
