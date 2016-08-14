@@ -14,7 +14,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'mbl.settings'
 django.setup()
 
 from django.conf import settings
-from books.models import Edition, Author, Series, EditionAuthor, Book, EditionSeries, Publisher
+from books.models import Edition, Author, Series, EditionAuthor, Book, BookSeries, Publisher
 
 logger = logging.getLogger('grab')
 logger.addHandler(logging.StreamHandler())
@@ -177,9 +177,9 @@ def gr_parser(gr_id,):
             new_series, created = Series.objects.get_or_create(goodreads_id=val['id'],
                                                                title=val['title'],
                                                                description=val['description'])
-            book_series = EditionSeries.objects.create(book=new_book,
-                                                       series=new_series,
-                                                       position=position_in_series)
+            book_series = BookSeries.objects.create(book=new_book,
+                                                    series=new_series,
+                                                    position=position_in_series)
             book_series.save()
 
 gr_parser(1)

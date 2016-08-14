@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
-{% load thumbnail %}
 {% block title %}
-    <title>{{ book.original_title }} / Книга</title>
+    <title>{{ book.name_eng }} / Книга</title>
 {% endblock %}
 
 {% block content %}
@@ -46,6 +45,8 @@
               <p><span class="grey-text">Форматы:</span> {% for f in format %}{{ f }}, {% endfor %} <a>и др.</a></p>
               <p><span class="grey-text">Дата первой публикации:</span> {{ book.original_publication_date|date:"d/m/Y" }}</p>
               <p><span class="grey-text">Рейтинг:</span> {{ book.get_content_rating_display }}</p>
+              <p><span class="grey-text">Линейность сюжета:</span> {{ book.get_plot_structures_display }}</p>
+              <p><span class="grey-text">Время действия:</span> {{ book.get_time_of_action_display }}</p>
             </div>
           </div>
           <div class="col-md-8">
@@ -68,7 +69,7 @@
             <div class="title grey lighten-3 text-uppercase text-bold">
               <span>Описание</span>
             </div>
-            <p>{{ book.description }}</p>
+            <p>{{ book.description_ru }}</p>
           </div>
         </div>
       </div>
@@ -93,7 +94,7 @@
                 </a>
             </div>
             <div class="media-body">
-              <div class="text-bold"><a href="{{ author.author.get_absolute_url }}">{{ author.author.name }}</a></div>
+              <div class="text-bold"><a href="{{ author.author.get_absolute_url }}">{{ author.author.name_eng }}</a></div>
               <div class="notice">{{ author.get_role_display }}</div>
             </div>
           </div>

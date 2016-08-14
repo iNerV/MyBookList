@@ -6,7 +6,7 @@ from books.models import Book,\
     Publisher,\
     CoverOfPublisher,\
     EditionAuthor,\
-    EditionSeries,\
+    BookSeries,\
     BookGenres,\
     AuthorPhoto
 
@@ -32,7 +32,7 @@ class AuthorInline(admin.TabularInline):
 
 
 class SeriesInline(admin.TabularInline):
-    model = EditionSeries
+    model = BookSeries
     extra = 1
 
 
@@ -45,20 +45,20 @@ class PublisherAdmin(admin.ModelAdmin):
     inlines = [CoverOfPublisherInline]
 
 
-class BookAdmin(admin.ModelAdmin):
-    inlines = [AuthorInline, SeriesInline]
+class EditionAdmin(admin.ModelAdmin):
+    inlines = [AuthorInline]
 
 
 class AuthorAdmin(admin.ModelAdmin):
     inlines = [PhotoOfAuthorInline]
 
 
-class SummaryAdmin(admin.ModelAdmin):
-    inlines = [GenresInline]
+class BookAdmin(admin.ModelAdmin):
+    inlines = [GenresInline, SeriesInline]
 
 
-admin.site.register(Book, SummaryAdmin)
+admin.site.register(Book, BookAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Series)
 admin.site.register(Publisher, PublisherAdmin)
-admin.site.register(Edition, BookAdmin)
+admin.site.register(Edition, EditionAdmin)
