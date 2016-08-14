@@ -35,10 +35,16 @@ class AbstractImage(models.Model):
     class Meta:
         abstract = True
 
-    image = ImageField(upload_to=image_to, blank=True)  # original
+    image = ImageField(upload_to=image_to, blank=True, width_field='_width')  # original
     image_xs = ImageField(upload_to=image_to, blank=True, image_size_type='xs', editable=False)  # 48
     image_sm = ImageField(upload_to=image_to, blank=True, image_size_type='sm', editable=False)  # 96
     image_md = ImageField(upload_to=image_to, blank=True, image_size_type='md', editable=False)  # 120
+
+    _width = int()
+
+    def clean(self):
+        if self._width < THUMB_SIZE['md']:
+            raise ValidationError(_('Минимальная ширина изображения {}px'.format(THUMB_SIZE['md'])))
 
     def save(self, *args, **kwargs):
         super(AbstractImage, self).save(*args, **kwargs)
@@ -88,7 +94,7 @@ class AbstractImage(models.Model):
         # Save thumbnail to in-memory file as BytesIO
         temp_thumb = BytesIO()
         image.save(temp_thumb, ftype)
-        temp_thumb.seek(0)  # fixme проблема с прозрачными png
+        temp_thumb.seek(0)
 
         image = ''
         if size == 'xs':
