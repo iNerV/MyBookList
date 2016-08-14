@@ -181,20 +181,24 @@ class Edition(AbstractImage, models.Model):
         return self.title
 
     def clean(self, *args, **kwargs):
-        # if self.publication_date < self.summary.original_publication_date:  # fixme у summary больше нет даты
-        #     self.is_original = True
-        #     b = self.summary
-        #     b.original_publication_date = self.publication_date
-        #     b.save(update_fields=['original_publication_date'])
-        if self.is_original:
-            try:
-                old_prim = Edition.objects.get(is_original=True, summary=self.summary)
-                if old_prim != self:
-                    old_prim.is_original = False
-                    old_prim.save(update_fields=['is_original'])
-                    self.is_original = True
-            except Edition.DoesNotExist:
+        if self.publication_date:
+            pub_date = Edition.objects.filter(summary=self.summary, publication_date__lte=self.publication_date)\
+                .exclude(pk=self.pk)
+            if not pub_date:
                 self.is_original = True
+        if self.is_original:
+            min_pub = Edition.objects.aggregate(min=Min('publication_date'))
+            if self.publication_date > min_pub['min'] and min_pub is not None:
+                self.is_original = False
+            else:
+                try:
+                    old_prim = Edition.objects.get(is_original=True, summary=self.summary)
+                    if old_prim != self:
+                        old_prim.is_original = False
+                        old_prim.save(update_fields=['is_original'])
+                        self.is_original = True
+                except Edition.DoesNotExist:
+                    self.is_original = True
         else:
             try:
                 Edition.objects.get(is_original=True, summary=self.summary)
