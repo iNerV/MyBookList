@@ -1,9 +1,9 @@
 from django.conf.urls import url
 
-from . import views
+from .views import *
 
 urlpatterns = [
-    url(r'^$', views.UsersList.as_view(), name='user-list'),
-    url(r'^(?P<slug>[a-zA-Z0-9-]+)/$', views.UserDetail.as_view(), name='user-detail'),
-    url(r'^(?P<slug>[a-zA-Z0-9-]+)/edit$', views.UserSettings.as_view(), name='user-settings'),
+    url(r'^$', UsersList.as_view(), name='user-list'),
+    url(r'^(?P<slug>[a-zA-Z0-9-]+)/$', UserDetail.as_view(), name='user-detail'),
+    url(r'^(?P<slug>[a-zA-Z0-9-]+)/edit$', UserSettings.as_view(), name='user-settings'),
 ]

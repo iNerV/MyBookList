@@ -1,8 +1,8 @@
 from django.conf.urls import url
 
-from books import views
+from books.views import *
 
 urlpatterns = [
-    url(r'^$', views.AuthorsList.as_view(), name='authors-list'),
-    url(r'^(?P<pk>\d+)/$', views.AuthorDetail.as_view(), name='author-detail'),
+    url(r'^$', AuthorsList.as_view(), name='authors-list'),
+    url(r'^(?P<pk>\d+)/$', AuthorDetail.as_view(), name='author-detail'),
 ]

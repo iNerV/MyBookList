@@ -44,7 +44,7 @@ class Author(AbstractBilingual, models.Model):
         return self.name_eng
 
     def get_absolute_url(self):
-        return reverse('author-detail', args=[str(self.id)])
+        return reverse('author-detail', kwargs={'pk': self.pk})
 
     def get_photo(self):
         return self.authorphoto_set.get(primary=True)
@@ -63,12 +63,13 @@ class AuthorPhoto(AbstractImage, models.Model):
 
     def clean(self, *args, **kwargs):
         if self.primary:
-            try:
-                old_prim = AuthorPhoto.objects.get(primary=True, author=self.author)
-                old_prim.primary = False
-                old_prim.save(update_fields=['primary'])
-            except self.DoesNotExist:
-                pass
+            AuthorPhoto.objects.filter(primary=True, author=self.author).exclude(pk=self.pk).update(primary=False)
+            # try:
+            #     old_prim = AuthorPhoto.objects.get(primary=True, author=self.author)
+            #     old_prim.primary = False
+            #     old_prim.save(update_fields=['primary'])
+            # except self.DoesNotExist:
+            #     pass
         else:
             try:
                 AuthorPhoto.objects.get(primary=True, author=self.author)
@@ -87,7 +88,7 @@ class Series(AbstractBilingual, models.Model):
         return self.name_eng
 
     def get_absolute_url(self):
-        return reverse('series-detail', args=[str(self.id)])
+        return reverse('series-detail', kwargs={'pk': self.pk})
 
 
 class Genre(AbstractBilingual, models.Model):
@@ -108,7 +109,7 @@ class Book(AbstractBilingual, models.Model):
     time_of_action = models.IntegerField(choices=TIME_OF_ACTION, default=0)
     genres = models.ManyToManyField(Genre, through='BookGenres')
     series = models.ManyToManyField(Series, through='BookSeries', blank=True)
-    edition = []
+    _editions = []
 
     class Meta:
         verbose_name = _('Книга')
@@ -118,11 +119,11 @@ class Book(AbstractBilingual, models.Model):
         return self.name_eng
 
     def get_absolute_url(self):
-        return reverse('book-summary', args=[str(self.id)])
+        return reverse('book-summary', kwargs={'pk': self.pk})
 
     def get_editions(self):
-        self.edition = self.edition_set.all()
-        return self.edition
+        self._editions = self.edition_set.all()
+        return self._editions
 
     def get_authors(self):
         return self.editionauthor_set.all() \
@@ -140,13 +141,13 @@ class Book(AbstractBilingual, models.Model):
             .distinct('series')
 
     def get_lang(self):
-        return list(set([x.get_language_display() for x in self.edition]))[:2]
+        return list(set([x.get_language_display() for x in self._editions]))[:2]
 
     def get_format(self):
-        return list(set([x.get_book_format_display() for x in self.edition]))[:2]
+        return list(set([x.get_book_format_display() for x in self._editions]))[:2]
 
     def get_cover(self):
-        for x in self.edition:
+        for x in self._editions:
             if x.is_original:
                 try:
                     return x.image.url
@@ -154,7 +155,7 @@ class Book(AbstractBilingual, models.Model):
                     pass
 
     def get_pages(self):
-        return self.edition.distinct().aggregate(min=Min('num_pages'), max=Max('num_pages'))  # notice +1 запрос
+        return self._editions.distinct().aggregate(min=Min('num_pages'), max=Max('num_pages'))  # notice +1 запрос
 
 
 class Edition(AbstractImage, models.Model):
@@ -182,7 +183,7 @@ class Edition(AbstractImage, models.Model):
     def __str__(self):
         return self.title
 
-    def clean(self, *args, **kwargs):
+    def clean(self, *args, **kwargs):  # fixme вернуть в save
         if self.isbn and not self.isbn13:
             self.isbn13 = convert_10_to_13(self.isbn)
 

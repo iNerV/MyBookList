@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-    <title>{{ book.name_eng }} / Книга</title>
+    <title>{{ book.name_eng }} / {{ book.name_ru }} / Книга</title>
 {% endblock %}
 
 {% block content %}
@@ -40,6 +40,7 @@
               <p><span class="grey-text darken-1">ISBN:</span> {% for book in editions|slice:":1" %}{{ book.isbn }}{% endfor %} <a>и др.</a></p>
               <p><span class="grey-text">ISBN13:</span>  {% for book in editions|slice:":1" %}{{ book.isbn13 }}{% endfor %} <a>и др.</a></p>
               <p><span class="grey-text">ASIN:</span> {% for book in editions|slice:":1" %}{{ book.asin }}{% endfor %} <a>и др.</a></p>
+              <p><span class="grey-text">kASIN:</span> {% for book in editions|slice:":1" %}{{ book.kindle_asin }}{% endfor %} <a>и др.</a></p>
               <p><span class="grey-text">Языки:</span> {% for l in lang %}{{ l }}, {% endfor %} <a>и др.</a></p> {# TODO придумать как это дело выводить правильно #}
               <p><span class="grey-text"><abbr title="В различных изданиях и на разных языках количество страниц отличается">Страниц:</abbr></span>{% if num_pages.min %} от {{ num_pages.min }} до {{ num_pages.max }}{% else %} Неизвестно{% endif %}</p>
               <p><span class="grey-text">Форматы:</span> {% for f in format %}{{ f }}, {% endfor %} <a>и др.</a></p>
@@ -47,6 +48,8 @@
               <p><span class="grey-text">Рейтинг:</span> {{ book.get_content_rating_display }}</p>
               <p><span class="grey-text">Линейность сюжета:</span> {{ book.get_plot_structures_display }}</p>
               <p><span class="grey-text">Время действия:</span> {{ book.get_time_of_action_display }}</p>
+              <p><span class="grey-text">Номер в серии:</span> {% for s in series %}{{ s.position }}{% endfor %}</p>
+            {% for s in series %}{{ s.series.name_eng }}{{ s.series.name_ru }}{% endfor %}
             </div>
           </div>
           <div class="col-md-8">
@@ -69,6 +72,7 @@
             <div class="title grey lighten-3 text-uppercase text-bold">
               <span>Описание</span>
             </div>
+            <p>{{ book.description_eng }}</p>
             <p>{{ book.description_ru }}</p>
           </div>
         </div>
@@ -94,7 +98,7 @@
                 </a>
             </div>
             <div class="media-body">
-              <div class="text-bold"><a href="{{ author.author.get_absolute_url }}">{{ author.author.name_eng }}</a></div>
+              <div class="text-bold"><a href="{{ author.author.get_absolute_url }}">{{ author.author.name_eng }}/{{ author.author.name_ru }}</a></div>
               <div class="notice">{{ author.get_role_display }}</div>
             </div>
           </div>
