@@ -32,6 +32,7 @@ class AbstractBilingual(models.Model):
 
 
 class AbstractImage(models.Model):
+    """Для создания превью используется сигнал make_thumb()"""
     class Meta:
         abstract = True
 
@@ -45,18 +46,6 @@ class AbstractImage(models.Model):
     def clean(self):
         if self._width < THUMB_SIZE['md']:
             raise ValidationError(_('Минимальная ширина изображения {}px'.format(THUMB_SIZE['md'])))
-
-    def save(self, *args, **kwargs):
-        super(AbstractImage, self).save(*args, **kwargs)
-        if not self.image_xs and self.image:
-            if not self.make_thumbnail('xs'):
-                raise Exception('Could not create thumbnail - is the file type valid?')
-        if not self.image_sm and self.image:
-            if not self.make_thumbnail('sm'):
-                raise Exception('Could not create thumbnail - is the file type valid?')
-        if not self.image_md and self.image:
-            if not self.make_thumbnail('md'):
-                raise Exception('Could not create thumbnail - is the file type valid?')
 
     def make_thumbnail(self, size):
         """

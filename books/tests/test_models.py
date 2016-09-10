@@ -226,13 +226,9 @@ class EditionTestCase(TestCase):
                           publisher=self.publisher)
         self.assertEqual(edition.isbn13, '')
         self.assertFalse(edition.is_original)
-        edition.clean()
+        edition.save()
         self.assertTrue(edition.is_original)
         self.assertEqual(edition.isbn13, '9780451524935')
-
-    # def test_clean(self):
-    #     edition = Edition(_width=100)
-    #     self.assertRaises(ValidationError, edition.clean)
 
 
 class PublisherTestCase(TestCase):

@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from books.utils import convert_10_to_13
 
-from core.constants import LANGUAGES, FORMATS, DEGREE, GENDER, CONTENT_RATING, ROLE, PLOT_STRUCTURES, TIME_OF_ACTION
+from core.constants import *
 from core.mixins import AbstractBilingual, AbstractImage
 
 
@@ -61,7 +61,7 @@ class AuthorPhoto(AbstractImage, models.Model):
     def __str__(self):
         return self.author.name_eng
 
-    def clean(self, *args, **kwargs):
+    def save(self, *args, **kwargs):
         if self.primary:
             AuthorPhoto.objects.filter(primary=True, author=self.author).exclude(pk=self.pk).update(primary=False)
             # try:
@@ -75,6 +75,7 @@ class AuthorPhoto(AbstractImage, models.Model):
                 AuthorPhoto.objects.get(primary=True, author=self.author)
             except AuthorPhoto.DoesNotExist:
                 self.primary = True
+        super(AuthorPhoto, self).save(*args, **kwargs)
 
 
 class Series(AbstractBilingual, models.Model):
@@ -183,7 +184,7 @@ class Edition(AbstractImage, models.Model):
     def __str__(self):
         return self.title
 
-    def clean(self, *args, **kwargs):  # fixme вернуть в save
+    def save(self, *args, **kwargs):
         if self.isbn and not self.isbn13:
             self.isbn13 = convert_10_to_13(self.isbn)
 
@@ -211,6 +212,7 @@ class Edition(AbstractImage, models.Model):
                 Edition.objects.get(is_original=True, summary=self.summary)
             except Edition.DoesNotExist:
                 self.is_original = True
+        super(Edition, self).save(*args, **kwargs)
 
 
 class BookGenres(models.Model):

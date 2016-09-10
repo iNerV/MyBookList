@@ -1,5 +1,6 @@
 from django.dispatch import receiver
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 import os
 import shutil
@@ -67,3 +68,18 @@ def auto_delete_file(sender, instance, **kwargs):
     for c in cover:
         if c.image:
             shutil.rmtree(os.path.dirname(c.image.path), ignore_errors=True)
+
+
+@receiver(models.signals.post_save, sender=Edition)
+@receiver(models.signals.post_save, sender=AuthorPhoto)
+@receiver(models.signals.post_save, sender=CoverOfPublisher)
+def make_thumb(sender, instance, **kwargs):
+    if not instance.image_xs and instance.image:
+        if not instance.make_thumbnail('xs'):
+            raise Exception(_('Could not create thumbnail - is the file type valid?'))
+    if not instance.image_sm and instance.image:
+        if not instance.make_thumbnail('sm'):
+            raise Exception(_('Could not create thumbnail - is the file type valid?'))
+    if not instance.image_md and instance.image:
+        if not instance.make_thumbnail('md'):
+            raise Exception(_('Could not create thumbnail - is the file type valid?'))
